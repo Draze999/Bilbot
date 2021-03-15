@@ -1,5 +1,6 @@
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
+var TrueFile = new Array();
 
 module.exports = {
     name: 'play',
@@ -27,28 +28,47 @@ module.exports = {
         }
 
         // REJOINS LE VOCAL
-
         const  connection = await voiceChannel.join();
 
         // PLAYING MUSIC
-
         if (!validURL(args))
         {
+
+            message.channel.send(":warning: Musique par recherche temporairement désactivée :warning:")
+            voiceChannel.leave()
+            return
             // RECHERCHE PAR MOTS
             const videoFinder = async (query) => {
                 const videoResult = await ytSearch(query);
                 return videoResult.videos[0].url;
-     
             }
             const video = await videoFinder(args);
-
+            TrueFile.push(video)
+            TrueFile.forEach(element => {
+                console.log(element)
+            });
             // STREAM AUDIO
 
-            const stream  = ytdl(await video, {filter: 'audioonly'});
-            connection.play(stream, {seek: 0, volume: 1})
-            .on('finish', () =>{
-                voiceChannel.leave()
-            });
+            
+            if (TrueFile.length==1)
+            {
+                const stream  = ytdl(await video, {filter: 'audioonly'});
+                connection.play(stream, {seek: 0, volume: 1})
+                .on('finish', () =>{
+                    TrueFile.shift()
+                    console.log(TrueFile)
+                    if (TrueFile.length==0)
+                    {
+                        console.log("bybye")
+                        voiceChannel.leave()
+                    }
+                    else
+                    {
+                        this.execute(message, TrueFile[0])
+                    }
+                })
+            }
+            
             await message.channel.send(`Musique par recherche : ***${(await ytdl.getBasicInfo(video)).videoDetails.title}***`)
         }
         else
@@ -62,7 +82,18 @@ module.exports = {
             .on('finish', () =>{
                 voiceChannel.leave()
             });
-            await message.channel.send(`Musique par URL : ***${(await ytdl.getBasicInfo(video)).videoDetails.title}***`)
+            try 
+            {
+                await message.channel.send(`Musique par URL : ***${(await ytdl.getBasicInfo(video)).videoDetails.title}***`)
+            }
+            catch
+            {
+                await message.channel.send("Musique par URL **non trouvée**. ***D'abord, vérifiez votre lien***, puis retirez les particules telles que **'&list=...', '&index=...'** ainsi que leurs arguments.")
+                voiceChannel.leave()
+            }
+
+            
+            
         }
         
         

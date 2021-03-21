@@ -37,6 +37,7 @@ module.exports = {
             message.channel.send(":warning: Musique par recherche temporairement désactivée :warning:")
             voiceChannel.leave()
             return
+        // ************************************************************************************************************************
             // RECHERCHE PAR MOTS
             const videoFinder = async (query) => {
                 const videoResult = await ytSearch(query);
@@ -71,6 +72,7 @@ module.exports = {
             
             await message.channel.send(`Musique par recherche : ***${(await ytdl.getBasicInfo(video)).videoDetails.title}***`)
         }
+        // ************************************************************************************************************************
         else
         {
             const video = args;

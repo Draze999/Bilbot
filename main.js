@@ -207,4 +207,4 @@ bot.on('ready', function () {
 //███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║
 //╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝
                                        
-bot.login("ODE4NDg5OTQ4NjA0NDY1MTYz.YEY0Kg.iCPeHa6XMOidsbZDg8rAZP3Y6mk");
+bot.login("");
